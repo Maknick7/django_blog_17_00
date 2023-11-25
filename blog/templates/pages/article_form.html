@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Создать пост
+{% endblock title %}
+
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-outline-success">Создать</button>
+</form>
+{% endblock content %}

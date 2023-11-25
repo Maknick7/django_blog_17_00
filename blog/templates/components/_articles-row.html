@@ -1,0 +1,9 @@
+<div class="row">
+    {% for article in articles %}
+    <div class="col-4 mb-3">
+        {% include 'components/_article-card.html' %}
+    </div>
+    {% empty %}
+    <h3 class="text-center">No articles yet</h3>
+    {% endfor %}
+</div>

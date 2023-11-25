@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
-Главная страница
-{% endblock title %}
+Избранное
+{% endblock %}
+
 
 {% block content %}
-
-
-<div class="row row-gap-4">
+<h1>Избранное</h1>
+<div class="row row-gap-4 mt-4">
     {% for article in articles %}
     <div class="col-4">
         <div class="card">
@@ -21,7 +20,7 @@
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    Автор: <a href="{% url 'profile' article.author.username %}"><b>{{ article.author }}</b></a>
+                    Автор: <b>{{ article.author }}</b>
                 </li>
                 <li class="list-group-item">
                     Категория: <b>{{ article.category }}</b>
@@ -42,4 +41,6 @@
 
     {% include './include/_pagination.html' %}
 </div>
-{% endblock content %}
+
+{% endblock %}
+

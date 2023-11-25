@@ -2,13 +2,29 @@
 
 
 {% block title %}
-Главная страница
-{% endblock title %}
+{{ user.username }}
+{% endblock %}
 
 {% block content %}
+<ul class="list-group">
+    <li class="list-group-item">
+        Username: <b>{{ user.username }}</b>
+    </li>
+    <li class="list-group-item">
+        Email: <b>{{ user.email }}</b>
+    </li>
+    <li class="list-group-item">
+        Experience: <b>{{ experience }}</b> days
+    </li>
+    <li class="list-group-item">
+        Views: <b>{{ total_views }}</b>
+    </li>
+    <li class="list-group-item">
+        Comments: <b>{{ total_comments }}</b>
+    </li>
+</ul>
 
-
-<div class="row row-gap-4">
+<div class="row row-gap-4 mt-4">
     {% for article in articles %}
     <div class="col-4">
         <div class="card">
@@ -21,7 +37,7 @@
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    Автор: <a href="{% url 'profile' article.author.username %}"><b>{{ article.author }}</b></a>
+                    Автор: <b>{{ article.author }}</b>
                 </li>
                 <li class="list-group-item">
                     Категория: <b>{{ article.category }}</b>
@@ -42,4 +58,4 @@
 
     {% include './include/_pagination.html' %}
 </div>
-{% endblock content %}
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+
+{% block title %}
+Статья: {{ article.title }}
+{% endblock %}
+
+{% block content %}
+
+
+<div class="card">
+    {% if request.user.is_authenticated %}
+    {% is_article_in_user_favorites user=request.user article=article as is_fav %}
+    {% if not is_fav %}
+    <a href="{% url 'add_fav' user_id=request.user.pk article_id=article.pk %}" class="position-absolute"
+       style="right: 15px; top: 15px; font-size: 28px">
+        <i class="bi bi-heart"></i>
+    </a>
+    {% else %}
+    <a href="{% url 'del_fav' user_id=request.user.pk article_id=article.pk %}" class="position-absolute"
+       style="right: 15px; top: 15px; font-size: 28px">
+        <i class="bi bi-heart-fill"></i>
+    </a>
+    {% endif %}
+
+
+    {% endif %}
+    {% if article.photo %}
+    <img src="{{ article.photo.url }}" class="card-img-top" alt="...">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">{{ article.title }}</h5>
+        <p class="card-text">{{ article.short_description }}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            Автор: <b>{{ article.author }}</b>
+        </li>
+        <li class="list-group-item">
+            Категория: <b>{{ article.category }}</b>
+        </li>
+        <li class="list-group-item">
+            Кол-во просмотров: <b>{{ article.views }}</b>
+        </li>
+        <li class="list-group-item">
+            Дата создания: <b>{{ article.created_at }}</b>
+        </li>
+    </ul>
+    <div class="card-body d-flex justify-content-between align-items-center">
+        {% if request.user == article.author %}
+        <div class="d-flex gap-2">
+            <a href="{% url 'delete' article.pk %}" class="btn btn-danger">Удалить</a>
+            <a href="{% url 'update' article.pk %}" class="btn btn-warning">Изменить</a>
+        </div>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+        <div class="d-flex gap-2 align-items-center">
+            <a href="{% url 'add_vote' obj_type='article' obj_id=article.pk action='add_dislike' %}"
+               class="btn btn-danger">Дизлайк</a>
+            <span class="text-danger">{{ dislikes }}</span>
+            <a href="{% url 'add_vote' obj_type='article' obj_id=article.pk action='add_like' %}"
+               class="btn btn-success">Лайк</a>
+            <span class="text-success">{{ likes }}</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-5">
+    <h2 class="text-center">Comments</h2>
+    {% if not request.user.is_authenticated %}
+    <p class="text-center">Only authorized users can leave comment. <a href="{% url 'login' %}">Login</a></p>
+    {% endif %}
+
+    <div class="comments d-flex flex-column row-gap-3 mb-4">
+        {% for comment in comments %}
+        <div class="card">
+            <div class="card-header text-end d-flex align-items-center flex-row-reverse justify-content-between">
+                {% if request.user.is_authenticated %}
+                <div class="d-flex gap-2 align-items-center">
+                    <a href="{% url 'add_vote' obj_type='comment' obj_id=comment.pk action='add_dislike' %}"
+                       class="btn btn-danger">Дизлайк</a>
+                    <span class="text-danger">
+                        {% for key, value in comments_dislikes.items %}
+                            {% if comment.pk == key %}
+                                {{ value }}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <a href="{% url 'add_vote' obj_type='comment' obj_id=comment.pk action='add_like' %}"
+                       class="btn btn-success">Лайк</a>
+                    <span class="text-success">
+                        {% for key, value in comments_likes.items %}
+                            {% if comment.pk == key %}
+                                {{ value }}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                </div>
+                {% endif %}
+                {{ comment.created_at }}
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>{{ comment.body }}</p>
+                    <footer class="blockquote-footer"><cite title="{{ comment.author }}">{{ comment.author }}</cite>
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+        {% empty %}
+        <h3 class="text-center border py-3 mt-5">No comments</h3>
+        {% endfor %}
+
+
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <!--        <textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>-->
+        {{ form }}
+        <button class="btn btn-dark mt-3">Send</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

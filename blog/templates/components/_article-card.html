@@ -1,0 +1,29 @@
+<div class="card" id="gallery">
+    {% if article.image %}
+    <a data-fslightbox href=""></a>
+    <a data-fslightbox href="{{ article.image.url }}">
+        <img src="{{ article.image.url }}" class="card-img-top object-fit-cover" alt="..." height="250">
+    </a>
+    {% else %}
+    <h3 class="text-center">No photo</h3>
+    {% endif %}
+
+    <div class="card-body">
+        <h5 class="card-title">{{ article.title }}</h5>
+        <p class="card-text">{{ article.content }}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            Автор: <b>{{ article.author }}</b>
+        </li>
+        <li class="list-group-item">
+            Категория: <b>{{ article.category }}</b>
+        </li>
+        <li class="list-group-item">
+            Просмотры: <b>{{ article.views }}</b>
+        </li>
+    </ul>
+    <div class="card-body">
+        <a href="{{ article.get_absolute_url }}" class="card-link">Подробнее</a>
+    </div>
+</div>
